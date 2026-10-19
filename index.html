@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffe3ea">
+<meta property="og:title" content="💌 Для тебя приглашение">
+<meta property="og:description" content="Открой и выбери день и время.">
+<title>💌</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#ffe3ea; --bg2:#fff4f1; --card:#ffffff; --ink:#3a1f2b; --muted:#8a6673;
+  --rose:#c2305a; --rose-ink:#ffffff; --line:#efd3da; --chip:#fff8f9; --shadow:rgba(120,30,60,.25);
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg1:#2a1220; --bg2:#1c0f17; --card:#3a2230; --ink:#fbeef0; --muted:#c9a3b1;
+         --rose:#ff6b95; --rose-ink:#2a0f1a; --line:#553345; --chip:#40283a; --shadow:rgba(0,0,0,.5); }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:linear-gradient(160deg,var(--bg1),var(--bg2)); color:var(--ink);
+  font-family:"Manrope",system-ui,sans-serif; line-height:1.5; min-height:100vh; min-height:100dvh;
+  display:flex; justify-content:center; overflow-x:hidden;
+  padding:max(24px,env(safe-area-inset-top)) 16px max(36px,env(safe-area-inset-bottom));
+}
+main{width:100%; max-width:460px; position:relative; z-index:1}
+
+/* floating hearts */
+#hearts{position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden}
+#hearts span{position:absolute; bottom:-40px; color:var(--rose); opacity:0; animation:rise linear infinite}
+@keyframes rise{
+  0%{transform:translateY(0) rotate(0); opacity:0}
+  10%{opacity:.35}
+  100%{transform:translateY(-110vh) rotate(25deg); opacity:0}
+}
+
+/* two photos */
+.pair{position:relative; display:flex; justify-content:center; padding:14px 0 34px}
+.frame{
+  position:relative; width:48%; aspect-ratio:3/4; background:var(--card);
+  padding:7px 7px 7px; border-radius:14px; box-shadow:0 14px 30px var(--shadow);
+}
+.frame .ph{
+  position:absolute; inset:7px; border-radius:9px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:4px; text-align:center;
+  background:repeating-linear-gradient(45deg,var(--line),var(--line) 10px,var(--chip) 10px,var(--chip) 20px);
+  color:var(--muted); font-size:.72rem; padding:6px; word-break:break-all;
+}
+.frame .ph b{font-size:1.6rem}
+.frame img{position:absolute; inset:7px; width:calc(100% - 14px); height:calc(100% - 14px); object-fit:cover; border-radius:9px}
+.girl{transform:rotate(-6deg) translateX(6%); z-index:1}
+.me{transform:rotate(5deg) translateX(-6%); margin-top:18px}
+.heart-badge{
+  position:absolute; left:50%; bottom:6px; transform:translateX(-50%); z-index:3;
+  width:64px; height:64px; filter:drop-shadow(0 6px 10px var(--shadow)); animation:beat 1.4s ease-in-out infinite;
+}
+@keyframes beat{0%,100%{transform:translateX(-50%) scale(1)}15%{transform:translateX(-50%) scale(1.15)}30%{transform:translateX(-50%) scale(1)}45%{transform:translateX(-50%) scale(1.1)}}
+
+h1{
+  font-family:"Playfair Display",Georgia,serif; font-style:italic; font-weight:600;
+  font-size:clamp(1.6rem,7.5vw,2.1rem); line-height:1.15; margin:8px 0 6px; text-align:center;
+}
+.sub{color:var(--muted); margin:0 0 6px; text-align:center}
+.card{background:var(--card); border-radius:24px; padding:6px 18px 20px; margin-top:20px; box-shadow:0 10px 30px var(--shadow)}
+h2{font-size:1rem; margin:20px 0 10px}
+.row{display:flex; gap:8px; overflow-x:auto; padding-bottom:6px; scrollbar-width:thin}
+.chips{display:flex; flex-wrap:wrap; gap:8px}
+button.chip{
+  font:inherit; color:var(--ink); background:var(--chip); border:1.5px solid var(--line);
+  border-radius:14px; padding:10px 14px; cursor:pointer; flex:0 0 auto; text-align:center;
+  transition:background .15s,border-color .15s,color .15s,transform .1s;
+}
+button.chip:active{transform:scale(.96)}
+button.chip small{display:block; color:var(--muted); font-size:.75rem}
+button.chip[aria-pressed="true"]{background:var(--rose); border-color:var(--rose); color:var(--rose-ink)}
+button.chip[aria-pressed="true"] small{color:inherit; opacity:.85}
+textarea{
+  width:100%; font:inherit; color:var(--ink); background:var(--chip);
+  border:1.5px solid var(--line); border-radius:14px; padding:12px; resize:vertical; min-height:70px;
+}
+.save{
+  width:100%; margin-top:22px; font:inherit; font-weight:700; font-size:1.05rem;
+  background:var(--rose); color:var(--rose-ink); border:0; border-radius:16px; padding:16px; cursor:pointer;
+}
+.save:disabled{opacity:.45; cursor:not-allowed}
+.msg{min-height:1.4em; margin:10px 0 0; color:var(--muted); font-size:.9rem; text-align:center}
+.done{text-align:center; padding:30px 0}
+:focus-visible{outline:3px solid var(--rose); outline-offset:2px}
+[hidden]{display:none!important}
+
+/* ---- mobile ---- */
+.locbtn{width:100%; margin-top:2px}
+.locnote{color:var(--muted); font-size:.9rem; margin:0 0 8px}
+.locstatus{font-size:.85rem; color:var(--muted); min-height:1.2em; margin:6px 0 0}
+button,textarea{-webkit-tap-highlight-color:transparent; touch-action:manipulation}
+.row{display:grid; grid-template-columns:repeat(auto-fill,minmax(64px,1fr)); gap:8px; overflow:visible; padding-bottom:0}
+.chips{display:grid; grid-template-columns:repeat(3,1fr); gap:8px}
+button.chip{min-height:48px; padding:8px 4px}
+textarea{font-size:16px}
+.save{position:sticky; bottom:max(12px,env(safe-area-inset-bottom)); min-height:54px; box-shadow:0 8px 20px rgba(0,0,0,.18)}
+@media (prefers-reduced-motion: reduce){ #hearts{display:none} .heart-badge{animation:none} }
+</style>
+</head>
+<body>
+<div id="hearts" aria-hidden="true"></div>
+<main>
+
+  <div class="pair">
+    <!-- Put your two photos next to this file. Names are set in CONFIG below. -->
+    <div class="frame girl">
+      <div class="ph"><b>📷</b><span id="phGirl"></span></div>
+      <img id="imgGirl" alt="" onerror="this.remove()">
+    </div>
+    <div class="frame me">
+      <div class="ph"><b>📷</b><span id="phMe"></span></div>
+      <img id="imgMe" alt="" onerror="this.remove()">
+    </div>
+    <svg class="heart-badge" viewBox="0 0 32 32" aria-hidden="true">
+      <path fill="#e0245e" d="M16 28.5S3 20.2 3 11.6C3 7.4 6.2 4.5 9.8 4.5c2.5 0 4.5 1.3 6.2 3.6 1.7-2.3 3.7-3.6 6.2-3.6 3.6 0 6.8 2.9 6.8 7.1 0 8.6-13 16.9-13 16.9z"/>
+      <path fill="#fff" opacity=".35" d="M9 8.5c-2 .5-3.3 2.2-3.3 4.2 0 .6.1 1.1.3 1.6.2-2.8 1.5-4.8 3-5.8z"/>
+    </svg>
+  </div>
+
+  <h1>Пойдёте со мной на свидание?</h1>
+  <p class="sub">Выберите удобный день и время.</p>
+
+  <section id="pick" class="card">
+    <h2>День</h2>
+    <div class="row" id="days"></div>
+    <h2>Время</h2>
+    <div class="chips" id="times"></div>
+    <h2>Хотите что-то добавить? (по желанию)</h2>
+    <textarea id="note" placeholder="Идеи, любимая еда, место, куда хотелось бы пойти..."></textarea>
+    <h2>Местоположение <span style="font-weight:400;color:var(--muted)">(необязательно)</span></h2>
+    <p class="locnote">Хотите поделиться местоположением? Так мне будет проще выбрать место рядом. Браузер спросит разрешение, и вы сможете отказаться.</p>
+    <button type="button" class="chip locbtn" id="locBtn" aria-pressed="false">📍 Поделиться местоположением</button>
+    <p class="locstatus" id="locStatus" role="status"></p>
+    <button class="save" id="save" disabled>Сохранить</button>
+    <p class="msg" id="msg" role="status"></p>
+  </section>
+
+  <section id="done" class="card done" hidden>
+    <div style="font-size:3rem">💌</div>
+    <h1>Свидание назначено!</h1>
+    <p class="sub" id="summary"></p>
+  </section>
+
+</main>
+
+<script>
+/* ====== CONFIG ====== */
+const NTFY_TOPIC = "fd-q7m4x2k9tz8wc3";
+const PHOTO_GIRL = "picture_girl.png";   // her photo
+const PHOTO_ME   = "picture_me.jpg";     // your photo
+const DAYS_AHEAD = 10;
+const TIMES = ["12:00","14:00","16:00","18:00","19:30","21:00"];
+/* ==================== */
+
+const $ = id => document.getElementById(id);
+$("imgGirl").src = PHOTO_GIRL; $("phGirl").textContent = PHOTO_GIRL;
+$("imgMe").src = PHOTO_ME;     $("phMe").textContent = PHOTO_ME;
+
+// floating hearts
+const H = $("hearts");
+for (let i = 0; i < 10; i++) {
+  const s = document.createElement("span");
+  s.textContent = i % 3 ? "♥" : "❤";
+  s.style.left = Math.random() * 100 + "%";
+  s.style.fontSize = 12 + Math.random() * 22 + "px";
+  s.style.animationDuration = 9 + Math.random() * 10 + "s";
+  s.style.animationDelay = -Math.random() * 14 + "s";
+  H.appendChild(s);
+}
+
+// date + time pickers
+const wd = new Intl.DateTimeFormat("ru", {weekday: "short"});
+const md = new Intl.DateTimeFormat("ru", {month: "short", day: "numeric"});
+const full = new Intl.DateTimeFormat("ru", {weekday: "long", month: "long", day: "numeric"});
+const START = new Date(2026, 9, 20); // anchor: 20 October 2026
+const dates = Array.from({length: DAYS_AHEAD}, (_, i) => { const d = new Date(START); d.setDate(d.getDate() + i); return d; });
+let selDay = null, selTime = null;
+
+function chip(html, onclick){
+  const b = document.createElement("button");
+  b.type = "button"; b.className = "chip"; b.setAttribute("aria-pressed","false");
+  b.innerHTML = html; b.onclick = onclick; return b;
+}
+function select(groupId, btn){
+  $(groupId).querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed","false"));
+  btn.setAttribute("aria-pressed","true");
+  $("save").disabled = !(selDay !== null && selTime);
+}
+dates.forEach((d, i) => { const b = chip(`${wd.format(d)}<small>${md.format(d)}</small>`, () => { selDay = i; select("days", b); }); $("days").appendChild(b); });
+TIMES.forEach(t => { const b = chip(t, () => { selTime = t; select("times", b); }); $("times").appendChild(b); });
+
+let loc = null;
+$("locBtn").onclick = () => {
+  const st = $("locStatus"), b = $("locBtn");
+  if (loc) { loc = null; b.setAttribute("aria-pressed","false"); b.textContent = "📍 Поделиться местоположением"; st.textContent = ""; return; }
+  if (!navigator.geolocation) { st.textContent = "Не удалось определить местоположение."; return; }
+  st.textContent = "Определяем...";
+  navigator.geolocation.getCurrentPosition(p => {
+    loc = {lat: p.coords.latitude.toFixed(6), lng: p.coords.longitude.toFixed(6), acc: Math.round(p.coords.accuracy)};
+    b.setAttribute("aria-pressed","true"); b.textContent = "✓ Местоположение добавлено";
+    st.textContent = "Нажмите ещё раз, чтобы убрать.";
+  }, e => {
+    st.textContent = e.code === 1 ? "Доступ не разрешён — ничего страшного, можно пропустить." : "Не удалось определить местоположение.";
+  }, {enableHighAccuracy: true, timeout: 15000, maximumAge: 0});
+};
+
+$("save").onclick = async () => {
+  const d = dates[selDay], note = $("note").value.trim();
+  const dayEn = new Intl.DateTimeFormat("en", {weekday:"long", month:"long", day:"numeric"}).format(d);
+  const body = `${dayEn} at ${selTime}` + (note ? `\nNote: ${note}` : "");
+  const hdr = {"Title": "Date picked", "Tags": "heart", "Priority": "high"};
+  let body2 = body;
+  if (loc) {
+    const url = `https://www.google.com/maps?q=${loc.lat},${loc.lng}`;
+    body2 += `\nLocation: ${url} (accuracy ~${loc.acc} m)`;
+    hdr["Click"] = url;
+  }
+  $("save").disabled = true; $("msg").textContent = "Сохраняем...";
+  try {
+    const r = await fetch("https://ntfy.sh/" + encodeURIComponent(NTFY_TOPIC), {
+      method: "POST", body: body2, headers: hdr
+    });
+    if (!r.ok) throw new Error(r.status);
+    $("summary").textContent = `${full.format(d)}, в ${selTime}. До встречи.`;
+    $("pick").hidden = true; $("done").hidden = false;
+  } catch (e) {
+    $("msg").textContent = "Не удалось сохранить. Проверьте интернет и нажмите «Сохранить» ещё раз.";
+    $("save").disabled = false;
+  }
+};
+</script>
+</body>
+</html>
